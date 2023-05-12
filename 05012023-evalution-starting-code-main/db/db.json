@@ -1,9 +1,14 @@
 {
   "cart": [
     {
-      "content": "peach",
-      "amount": 5,
+      "content": "apple",
+      "amount": 16,
       "id": 1
+    },
+    {
+      "content": "peach",
+      "amount": 19,
+      "id": 2
     }
   ],
   "inventory": [
