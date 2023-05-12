@@ -125,12 +125,13 @@ const View = (() => {
   const appleListEl = document.querySelector(".appleList");
   const peachListEl = document.querySelector(".peachList");
   const cartListEl = document.querySelector(".cartList");
+  const checkoutButtonEl = document.querySelector(".checkout-btn");
   const renderList = (tasks)=>{
     console.log("in renderList",cartListEl);
     let tempList = "";
     console.log("renderList",tasks);
     tasks.forEach((task)=>{
-        const temp = `<li><span>${task.content} X ${task.amount}<span></li><button class="delete-btn" todo-id=${task.id}>delete</button>`;
+        const temp = `<li><span>${task.content} X ${task.amount}<span> <button class="delete-btn" todo-id=${task.id}>delete</button></li>`;
         //console.log(temp);
         tempList += temp;
     });
@@ -141,6 +142,7 @@ const View = (() => {
     appleListEl,
     peachListEl,
     cartListEl,
+    checkoutButtonEl,
     renderList
   };
 })();
@@ -152,7 +154,7 @@ const Controller = ((model, view) => {
   const init = () => {
     model.getCart().then(res=> {
       //console.log(res);
-      //res.reverse();
+      res.reverse();
       state.cart = res;
   });
   };
@@ -191,6 +193,7 @@ const Controller = ((model, view) => {
         console.log("numInCart",numInCart);
         if(numInCart === 0){
           let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
+          if(amountDisplay === 0) return;
           const newItem = {
             content:"peach",
             amount: amountDisplay
@@ -255,6 +258,7 @@ const Controller = ((model, view) => {
         console.log("numInCart",numInCart);
         if(numInCart === 0){
           let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
+          if(amountDisplay === 0) return;
           const newItem = {
             content:"apple",
             amount: amountDisplay
@@ -298,7 +302,14 @@ const Controller = ((model, view) => {
   })
   };
 
-  const handleCheckout = () => {};
+  const handleCheckout = () => {
+    view.checkoutButtonEl.addEventListener("click",(event)=>{
+      model.checkout().then(res=>{
+        const empty = [];
+        state.cart = empty;
+      })
+    })
+  };
   const bootstrap = () => {
     //handleUpdateAmount();
     handleAddToCartPeach();
