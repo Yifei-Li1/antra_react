@@ -33,10 +33,10 @@ const API = (() => {
   }).then();
   
 
-  const deleteFromCart = (id) => {
+  const deleteFromCart = (id) => 
     // define your method to delete an item in cart
-    fetch(URL + "/" + id, { method: "DELETE" }).then(data => data.json());
-  };
+    fetch(URL + "/cart"+"/" + id, { method: "DELETE" }).then(data => data.json());
+  
 
   const checkout = () => {
     // you don't need to add anything here
@@ -156,7 +156,7 @@ const Controller = ((model, view) => {
       state.cart = res;
   });
   };
-  const handleUpdateAmount = () => {};
+  //const handleUpdateAmount = () => {};
 
   const handleAddToCartPeach = () => {
     view.peachListEl.addEventListener("click",(event)=>{
@@ -287,11 +287,20 @@ const Controller = ((model, view) => {
     })
   };
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    view.cartListEl.addEventListener("click",(event)=>{
+      if(event.target.className !== "delete-btn") return;
+      const id = event.target.getAttribute("todo-id");
+      console.log("delete id: ",id,typeof id);
+      model.deleteFromCart(id).then((data) => {
+          state.cart = state.cart.filter((item) => item.id !== +id);
+      });
+  })
+  };
 
   const handleCheckout = () => {};
   const bootstrap = () => {
-    handleUpdateAmount();
+    //handleUpdateAmount();
     handleAddToCartPeach();
     handleAddToCartApple();
     handleDelete();
