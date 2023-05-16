@@ -1,10 +1,3 @@
-body{
-    width:100%;
-    height:100%;
-    margin:0px;
-    padding: 0px;
-
-}
 #app{
     display:flex;
     flex-direction: row;
@@ -18,12 +11,13 @@ body{
     
 }
 .inventory-container,.cart-container{
-    
     align-self: start;
     display:flex;
     flex-direction:column;
     min-height: 300px;
+    min-width: 40%;
     align-items: center;
+    margin:auto;
     
 }
 h1 {
@@ -38,7 +32,7 @@ li{
     display:flex;
     width: 100%;
     align-items: center;
-    min-width: 190px;
+    min-width: 100%;
     justify-content: space-evenly;
 
 }
@@ -67,10 +61,11 @@ button{
     background-color: rgb(67, 67, 255);
     color:white;
 }
-.cart-wrapper{
+.cart-wrapper, .itemList{
     display: flex;
     flex-direction: column;
     flex-grow:1;
+    width:100%;
 }
 .checkout-btn{
     position:fixed;
