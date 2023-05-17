@@ -4,12 +4,12 @@ const API = (() => {
   const getCart = () => 
     // define your method to get cart data
     fetch(URL+"/cart").then(data=>data.json());
-  
+    //fetch(URL+"/cart").then(data=>{data.json()}); 
 
-  const getInventory = () => {
+  const getInventory = () => 
     // define your method to get inventory data
     fetch(URL+"/inventory").then(data=>data.json());
-  };
+  
 
   const addToCart = (inventoryItem) => 
     // define your method to add an item to cart
@@ -63,19 +63,11 @@ const Model = (() => {
   // implement your logic for Model
   class State {
     #onChange;
+    #renderInventory;
     #inventory;
     #cart;
     constructor() {
-      this.#inventory = [
-        {
-          content: "apple",
-          id: 1
-        },
-        {
-          centent: "peach",
-          id: 2
-        }
-      ];
+      this.#inventory = [];
       this.#cart = [];
     }
     get cart() {
@@ -93,12 +85,14 @@ const Model = (() => {
     }
     set inventory(newInventory) {
       this.#inventory = newInventory;
+      this.#renderInventory();
       //update view 
     }
 
-    subscribe(cb) {
+    subscribe(renderList,renderInventory) {
       
-      this.#onChange = cb;
+      this.#onChange = renderList;
+      this.#renderInventory = renderInventory;
     }
   }
   const {
@@ -126,6 +120,7 @@ const View = (() => {
   const peachListEl = document.querySelector(".peachList");
   const cartListEl = document.querySelector(".cartList");
   const checkoutButtonEl = document.querySelector(".checkout-btn");
+  const inventoryListEl = document.querySelector(".itemList");
   const renderList = (tasks)=>{
     console.log("in renderList",cartListEl);
     let tempList = "";
@@ -135,15 +130,37 @@ const View = (() => {
         //console.log(temp);
         tempList += temp;
     });
-    console.log("tempList",tempList);
+    //console.log("tempList",tempList);
     cartListEl.innerHTML = tempList;
 }
+const renderInventory = (items)=>{
+  console.log("in renderList",inventoryListEl);
+  let tempList = "";
+  console.log("renderList",items);
+  items.forEach((item)=>{
+      const temp = `<li class=${item.content}><label>${item.content}</label> <button class="minus-btn">-</button><span class="amount">${item.amount}</span><button class="add-btn">+</button><button class="submit-btn">add to cart</button></li>`;
+      //console.log(temp);
+      tempList += temp;
+  });
+  //console.log("tempList",tempList);
+  inventoryListEl.innerHTML = tempList;
+}
+// const setnewnumber = (newNum,category)=>{
+//   let target = inventoryListEl.querySelector(`.${category}`).childNodes[3].innerHTML;
+//   target = newNum;
+//   inventoryListEl.querySelector(`.${category}`).childNodes[3].innerHTML = target;
+//   //console.log("target",target);
+
+//}
   return {
     appleListEl,
     peachListEl,
     cartListEl,
     checkoutButtonEl,
-    renderList
+    inventoryListEl,
+    renderInventory,
+    renderList,
+   //setnewnumber
   };
 })();
 
@@ -152,40 +169,67 @@ const Controller = ((model, view) => {
   const state = new model.State();
 
   const init = () => {
-    model.getCart().then(res=> {
-      //console.log(res);
+    model.getInventory().then(res=> {
+      console.log("res",res);
       res.reverse();
+
+      state.inventory = res;
+  });
+    model.getCart().then(res=> {
+      console.log("res",res);
+      res.reverse();
+
       state.cart = res;
   });
-  };
+    
+  }
   //const handleUpdateAmount = () => {};
 
-  const handleAddToCartPeach = () => {
-    view.peachListEl.addEventListener("click",(event)=>{
+  const handleAddToCart = () => {
+    view.inventoryListEl.addEventListener("click",(event)=>{
+      const category = event.target.parentElement.childNodes[0].innerHTML;
+      console.log("category",category);
       if(event.target.className === "minus-btn"){
-        console.log("minus-btn-peach");
+        
         let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
         if(amountDisplay === 0) return;
         else{
           amountDisplay--;
-          console.log(amountDisplay);
-          event.target.parentElement.childNodes[3].innerHTML = ''+amountDisplay;
+          console.log("amountDisplay",amountDisplay);
+          //view.setnewnumber(amountDisplay,category);
+          //event.target.parentElement.childNodes[3].innerHTML = ''+amountDisplay;
+          const temp = state.inventory;
+          for(item of temp){
+            if(item.content === category){
+              item.amount--;
+            }
+          }
+          state.inventory = temp;
 
         }
       }
       else if(event.target.className === "add-btn"){
-        console.log("add-btn-peach");
-        let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
-        amountDisplay++;
-        console.log("amountDisplay",amountDisplay);
-        event.target.parentElement.childNodes[3].innerHTML = ''+amountDisplay;
+        console.log("add-btn");
+        // let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
+        // amountDisplay++;
+        // console.log("amountDisplay",amountDisplay);
+        //view.setnewnumber(amountDisplay,category);
+        //update model by calling set inventory
+        const temp = state.inventory;
+        for(item of temp){
+          if(item.content === category){
+            item.amount++;
+          }
+        }
+        state.inventory = temp;
+        //event.target.parentElement.childNodes[3].innerHTML = ''+amountDisplay;
       }
       else if(event.target.className === "submit-btn"){
         //check if peach already exit in the cart
         let numInCart = 0;
         let id;
         for(item of state.cart){
-          if(item.content === "peach"){
+          if(item.content === category){
             numInCart = item.amount;
             id = item.id;
           }
@@ -195,7 +239,7 @@ const Controller = ((model, view) => {
           let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
           if(amountDisplay === 0) return;
           const newItem = {
-            content:"peach",
+            content:category,
             amount: amountDisplay
           }
           model.addToCart(newItem).then(res=>{
@@ -213,7 +257,7 @@ const Controller = ((model, view) => {
             console.log("update",state.cart);
             const tempList = [];
             for(item of state.cart){
-              if(item.content === "peach"){
+              if(item.content === category){
                 item.amount = amountDisplay;
               }
               tempList.push(item);
@@ -225,72 +269,6 @@ const Controller = ((model, view) => {
       }
     })
   };
-  const handleAddToCartApple = () => {
-    view.appleListEl.addEventListener("click",(event)=>{
-      if(event.target.className === "minus-btn"){
-        console.log("minus-btn-apple");
-        let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
-        if(amountDisplay === 0) return;
-        else{
-          amountDisplay--;
-          console.log(amountDisplay);
-          event.target.parentElement.childNodes[3].innerHTML = ''+amountDisplay;
-
-        }
-      }
-      else if(event.target.className === "add-btn"){
-        console.log("add-btn-apple");
-        let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
-        amountDisplay++;
-        console.log("amountDisplay",amountDisplay);
-        event.target.parentElement.childNodes[3].innerHTML = ''+amountDisplay;
-      }
-      else if(event.target.className === "submit-btn"){
-        //check if peach already exit in the cart
-        let numInCart = 0;
-        let id;
-        for(item of state.cart){
-          if(item.content === "apple"){
-            numInCart = item.amount;
-            id = item.id;
-          }
-        }
-        console.log("numInCart",numInCart);
-        if(numInCart === 0){
-          let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
-          if(amountDisplay === 0) return;
-          const newItem = {
-            content:"apple",
-            amount: amountDisplay
-          }
-          model.addToCart(newItem).then(res=>{
-            state.cart = [res,...state.cart];
-          });
-        }
-        else{
-          //already in the cart
-          let amountDisplay = +event.target.parentElement.childNodes[3].innerHTML;
-          amountDisplay += numInCart;
-          const newAmount = {
-            amount:amountDisplay,
-          }
-          model.updateCart(id,newAmount).then(res=>{
-            console.log("update",state.cart);
-            const tempList = [];
-            for(item of state.cart){
-              if(item.content === "apple"){
-                item.amount = amountDisplay;
-              }
-              tempList.push(item);
-            }
-            state.cart = tempList;
-          });
-        }
-        
-      }
-    })
-  };
-
   const handleDelete = () => {
     view.cartListEl.addEventListener("click",(event)=>{
       if(event.target.className !== "delete-btn") return;
@@ -312,14 +290,19 @@ const Controller = ((model, view) => {
   };
   const bootstrap = () => {
     //handleUpdateAmount();
-    handleAddToCartPeach();
-    handleAddToCartApple();
+    handleAddToCart();
     handleDelete();
     handleCheckout();
     init();
     state.subscribe(()=>{
       view.renderList(state.cart);
+    },
+    ()=>{
+      view.renderInventory(state.inventory);
     });
+    // state.subscribe(()=>
+    //   view.renderList(state.cart)
+    // );
   };
   return {
     bootstrap,
@@ -327,3 +310,4 @@ const Controller = ((model, view) => {
 })(Model, View);
 
 Controller.bootstrap();
+
