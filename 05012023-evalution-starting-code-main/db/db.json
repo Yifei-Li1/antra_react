@@ -2,7 +2,7 @@
   "cart": [
     {
       "content": "orange",
-      "amount": 7,
+      "amount": 13,
       "id": 1
     },
     {
@@ -14,6 +14,11 @@
       "content": "apple",
       "amount": 11,
       "id": 3
+    },
+    {
+      "content": "melon",
+      "amount": 6,
+      "id": 4
     }
   ],
   "inventory": [
@@ -31,6 +36,11 @@
       "content": "orange",
       "amount": 0,
       "id": 3
+    },
+    {
+      "content": "melon",
+      "amount": 0,
+      "id": 4
     }
   ]
 }
