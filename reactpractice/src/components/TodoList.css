@@ -1,0 +1,21 @@
+.todolist {
+    width: 700px;
+    margin: auto;
+    margin-top: 30px;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .todolist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .todoList-container{
+      display:flex;
+      flex-direction: row;
+  }

@@ -1,0 +1,39 @@
+{
+  "todos": [
+    {
+      "content": "goodbye",
+      "completed": false,
+      "id": 1
+    },
+    {
+      "content": "study",
+      "completed": false,
+      "id": 2
+    },
+    {
+      "content": "task1",
+      "completed": true,
+      "id": 3
+    },
+    {
+      "content": "task2",
+      "completed": true,
+      "id": 4
+    },
+    {
+      "content": "task3",
+      "completed": false,
+      "id": 5
+    },
+    {
+      "content": "task4",
+      "completed": true,
+      "id": 6
+    },
+    {
+      "content": "task5",
+      "completed": true,
+      "id": 7
+    }
+  ]
+}
