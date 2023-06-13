@@ -4,7 +4,7 @@ import Search from './Search'
 import Wishlist from './Wishlist'
 import {Provider} from 'react-redux'
 import {store} from '../redux/redux'
-
+import './booklist.css'
 function Layout() {
   return (
     <>

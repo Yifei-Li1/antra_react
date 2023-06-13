@@ -10,13 +10,6 @@ function Search() {
     const searchBooks = useSelector<any,SearchList["books"]>(state=>state.searchListBooks.books);
     const [searchResult, setSearchResult] = useState([]);
     const dispatch = useDispatch();
-    const tempBook:BookInfo = {
-        title:"hello",
-        author:["Yifei"],
-        img:"http://books.google.com/books/content?id=H0s3EAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-        inWish:true,
-        id:"1"
-    }
     const handleSearch = (input:string)=>{
         console.log("getingbooks",input);
         getBooks(`https://www.googleapis.com/books/v1/volumes?q=${input}&startIndex=0&maxResults=20`).then(res=>{
@@ -35,7 +28,7 @@ function Search() {
         dispatch(addToWishlist(bookToAdd));
     }
     useEffect(()=>{
-        searchResult.forEach(item=>{
+        searchResult?.forEach(item=>{
             console.log(item)
             if(item["volumeInfo"]["imageLinks"] !== undefined)
                 dispatch(addSearchResult({
