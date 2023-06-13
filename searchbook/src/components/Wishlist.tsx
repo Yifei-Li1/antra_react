@@ -12,11 +12,14 @@ function Wishlist() {
   return (
     <>
       <div>Wishlist</div>
-      <ul>
-        {wishlistBooks?.map(item=><li data-key={item.id}>{item.title}
+      <div className='list-wrapper'>
+        {wishlistBooks?.map(item=><div className='book-item' data-key={item.id}>
+          <img className='img-stype' src={item.img} alt="image"></img>
+          {item["title"]}
+          {item["author"]}
         <button onClick={handleDelete}>delete</button>
-        </li>)}
-      </ul>
+        </div>)}
+      </div>
     </>
     
   )
