@@ -1,0 +1,17 @@
+.list-wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+.book-item{
+    display:inline-flex;
+    flex-direction:column;
+    justify-content: space-between;
+    width: 200px;
+    height: 400px;
+    margin: 20px;
+}
+.img-style{
+    height:300px;
+    width:190px;
+}
