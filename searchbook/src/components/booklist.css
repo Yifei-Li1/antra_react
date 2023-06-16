@@ -7,13 +7,16 @@
     display:inline-flex;
     flex-direction:column;
     justify-content: space-between;
-    width: 200px;
+    width: 230px;
     height: 400px;
-    margin: 20px;
+    padding: 20px;
+    border: black;
+    border-radius: 5%;
+    background-color: rgb(114, 174, 231);
+    margin: 10px;
 }
 .img-style{
-    height:300px;
-    width:190px;
+    align-self: center;
 }
 ul{
     list-style-type: none;

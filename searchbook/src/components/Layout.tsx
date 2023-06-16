@@ -3,7 +3,7 @@ import {NavLink, Routes, Route} from 'react-router-dom'
 import Search from './Search'
 import Wishlist from './Wishlist'
 import {Provider} from 'react-redux'
-import {store} from '../redux/redux'
+import {store} from '../redux/store'
 import './booklist.css'
 function Layout() {
   return (
