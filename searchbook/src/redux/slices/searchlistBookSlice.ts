@@ -17,13 +17,13 @@ export interface IBookInfo {
     id:string
 }
 export interface ISearchbook{
-    booksSuggest:IBookInfo[]|undefined,
+    booksSuggest:IBookInfo[],
     books:IBookInfo[]|undefined,
     input:string,
     currentPage:number,
     itemsPerPage:number,
     totalItems:number,
-    onFocus:boolean
+    showSuggest:boolean
 }
 const initialState:ISearchbook = {
     booksSuggest:[],
@@ -32,19 +32,19 @@ const initialState:ISearchbook = {
     currentPage:1,
     itemsPerPage:20,
     totalItems:0,
-    onFocus:false
+    showSuggest:false
 }
 
 export const search = createAsyncThunk<any,undefined,{dispatch:AppDispatch;state:RootState}>('searbook/search', async (args,thunkAPI)=>{
    // console.log("args")
     
     const {input,currentPage,itemsPerPage} = thunkAPI.getState().searchlistBookSlice
-    console.log("input:",input === '');
+   // console.log("input:",input === '');
     if(input !== ''){
         const startIndex = (currentPage - 1) * itemsPerPage;
         const maxResults = itemsPerPage;
         const result = await getBooks(`https://www.googleapis.com/books/v1/volumes?q=${input}&startIndex=${startIndex}&maxResults=${maxResults}`)
-        console.log("result from search",result);
+        //console.log("result from search",result);
         return result
     }
     else{
@@ -59,10 +59,10 @@ export const searchSuggestion = createAsyncThunk<any,undefined,{dispatch:AppDisp
     //console.log("args")
     
     const {input} = thunkAPI.getState().searchlistBookSlice
-    console.log("input empty: ",input);
+   // console.log("input empty: ",input);
     if(input !== ''){
         const result = await getBooks(`https://www.googleapis.com/books/v1/volumes?q=${input}&startIndex=0&maxResults=20`)
-        console.log("searchSuggestion",result);
+        //console.log("searchSuggestion",result);
         return result
     }
     else{
@@ -77,7 +77,7 @@ const searchlistBookSlice = createSlice({
     initialState,
     reducers:{
         changeInputValue:(state,action)=>{
-            console.log("changeInputValue",action.payload)
+           // console.log("changeInputValue",action.payload)
             state.input = action.payload
         },
         clearResult:(state)=>{
@@ -86,11 +86,11 @@ const searchlistBookSlice = createSlice({
         updatePage:(state,action)=>{
             state.currentPage = action.payload
         },
-        // onfocus:(state)=>{
+        toggleSuggestion:(state,action)=>{
             
-        //     state.onFocus = !state.onFocus
-        //     console.log(state.onFocus)
-        // },
+            state.showSuggest = action.payload
+           // console.log("toggleSuggestion",state.showSuggest)
+        },
         addFromSuggestion:(state)=>{
             const myClonedArray:IBookInfo[] = [];
             state.booksSuggest?.forEach(val => myClonedArray.push(Object.assign({}, val)));
@@ -107,12 +107,13 @@ const searchlistBookSlice = createSlice({
                 if(action.payload["items"] !== undefined){
                     state.books = action.payload.items;
                     state.totalItems = action.payload.totalItems
+                    
                 }
                 
                 
             })
             .addCase(search.rejected,(state,action)=>{
-                console.log("err", action.error.message);
+                //console.log("err", action.error.message);
             })
             .addCase(searchSuggestion.fulfilled,(state,action)=>{
                 // state.booksSuggest = action.payload.items
@@ -134,5 +135,5 @@ const searchlistBookSlice = createSlice({
 
 }
 )
-export const {changeInputValue,clearResult,updatePage,clearSuggestion,addFromSuggestion} = searchlistBookSlice.actions;
+export const {changeInputValue,clearResult,updatePage,clearSuggestion,addFromSuggestion,toggleSuggestion} = searchlistBookSlice.actions;
 export default searchlistBookSlice.reducer;

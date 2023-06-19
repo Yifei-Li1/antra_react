@@ -19,28 +19,22 @@ export const initWishlist = (() =>
 export const addWishlistToLS = ((payload: IBookInfo[]|IBookInfo) =>
     (dispatch: AppDispatch, getState: () => RootState) => {
         const bookItems = payload;
-        let newWishlist 
+        let newWishlist
         //const { id } = bookItem;
-        console.log("adding to wishlist LS");
+        //console.log("adding to wishlist LS");
         const state = getState().wishlistBooksSlice;
         if(!Array.isArray(bookItems)){
             //single item
             if (!state.books.some((item) => item.id === bookItems.id)){
                 newWishlist = [bookItems, ...state.books];
             }
+            else{
+                newWishlist = [...state.books]
+            }
         }
         else{
-            //array of items from initalization
             newWishlist = bookItems
         }
-        
-        
-        // if (!state.books.some((item) => item.id === id)) {
-        //     newWishlist = [bookItem, ...state.books];
-        // } else {
-        //     newWishlist = state.books.filter((item) => item.id !== id);
-        // }
-        
         localStorage.setItem("wishlist", JSON.stringify(newWishlist));
         dispatch(addBook(newWishlist));
     }) as unknown as (bookItem: IBookInfo[]|IBookInfo) => AnyAction;
@@ -75,9 +69,9 @@ const wishlistSlice = createSlice({
             // }
         },
         deleteBook:(state,action)=>{
-            console.log("delete from wishlist",action.payload)
+            //console.log("delete from wishlist",action.payload)
             const index = state.books.findIndex(item=>item.id === action.payload)
-            console.log("index to delete",index)
+           // console.log("index to delete",index)
             state.books.splice(index,1)
             
         }

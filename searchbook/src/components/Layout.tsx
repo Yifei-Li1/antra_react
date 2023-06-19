@@ -10,8 +10,9 @@ function Layout() {
     <>
       <nav>
           <ul>
-              <li><NavLink to="/">search</NavLink></li>
-              <li><NavLink to="/wishlist">wishlist</NavLink></li>
+              <li style={{display:"inline",margin: "0 10px"}}><NavLink to="/">search</NavLink></li>
+
+              <li style={{display:"inline",margin: "0 10px"}}><NavLink to="/wishlist">wishlist</NavLink></li>
           </ul>
       </nav>
       <Routes>
