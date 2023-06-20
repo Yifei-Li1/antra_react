@@ -56,7 +56,7 @@ const App = () => {
       if (!timer && !queueIsFull ){
         console.log("timer is off, queue is empty")
         if(!leading){
-          func.apply(context,args);
+          
         }
         else{
           func.apply(context,args);
