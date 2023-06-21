@@ -68,6 +68,7 @@ const SearchBar = () => {
         }}
         ></input>
         <button
+          data-testid="search-btn"
           onClick={() => {
             dispatch(toggleSuggestion(false));
             dispatch(search());
