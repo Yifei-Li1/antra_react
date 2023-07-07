@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import _ from 'lodash'
+import Searchbar from './components/Searchbar';
 const App = () => {
   const [counter,setCounter] = useState(0);
   const myDebounce = (func,interval,option) => {
@@ -48,9 +49,8 @@ const App = () => {
   const myThrottle = (func,interval,option) => {
     let timer;
     let queueIsFull = false;
-    let {leading,trailing,maxWait} = option;
-    leading = leading || true;
-    trailing = trailing || true;
+    let leading = option?.leading ?? true;
+    let trailing = option?.trailing ?? true;
     return function (...args) {
       const context = this;
       if (!timer && !queueIsFull ){
@@ -74,9 +74,7 @@ const App = () => {
             func.apply(context,args);
           }
           else{
-            
           }
-          
           queueIsFull = false;
           timer = setTimeout(() => {
             timer = null;
@@ -102,6 +100,7 @@ const App = () => {
     <button onClick={()=>debouncedIncrement()}>debounced increment</button>
     <button onClick={()=>throttledIncrement()}>throttled increment</button>
     <button onClick={()=>setCounter(0)}>reset</button>
+    
     </>
   )
 }
